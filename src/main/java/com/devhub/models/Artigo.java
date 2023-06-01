@@ -22,6 +22,7 @@ public class Artigo {
     private String autor;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataAtualizacao;
+    @Column(columnDefinition = "TEXT")
     private String corpo;
 
     @ManyToOne
