@@ -1,22 +1,32 @@
 package com.devhub.controllers;
 
-import com.devhub.models.Artigo;
+import com.devhub.entities.Artigo;
+import com.devhub.exceptions.classes.ResourceNotFoundException;
+import com.devhub.models.ArtigoDTO;
 import com.devhub.services.ArtigosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/artigos")
+@RequiredArgsConstructor
 public class ArtigosController {
-    @Autowired
-    private ArtigosService service;
-    @GetMapping("/{id}")
-    public ResponseEntity<Artigo> findById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+
+    private final static String ARTIGOS_PATH = "/artigos";
+    private final static String ARTIGOS_ID_PATH = ARTIGOS_PATH + "/{id}";
+
+    private final ArtigosService service;
+    @GetMapping(value = ARTIGOS_ID_PATH)
+    public ResponseEntity<ArtigoDTO> findById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(service.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado")),
+                HttpStatus.OK);
+    }
+
+    @PostMapping(value = ARTIGOS_PATH)
+    public ResponseEntity<ArtigoDTO> saveNewArtigo(@RequestBody @Validated ArtigoDTO dto) {
+        return ResponseEntity.ok(service.saveNewArtigo(dto));
     }
 }

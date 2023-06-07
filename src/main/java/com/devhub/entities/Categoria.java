@@ -1,4 +1,4 @@
-package com.devhub.models;
+package com.devhub.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -17,8 +17,9 @@ public class Categoria {
     private static final long serialVersion = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
 
     @JsonIgnore
